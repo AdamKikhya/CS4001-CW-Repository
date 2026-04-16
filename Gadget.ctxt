@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=Gadget
+comment0.text=\r\n\ Gadget\ class\ represents\ a\ generic\ gadget\ with\ a\ model\ name,\r\n\ price,\ weight,\ and\ size.\r\n\r\n\ CS4001\ Coursework\ -\ Gadget\ Shop\r\n
+comment1.params=model\ price\ weight\ size
+comment1.target=Gadget(java.lang.String,\ double,\ int,\ java.lang.String)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ Gadget.\r\n\r\n\ @param\ model\ \ the\ model\ name\ of\ the\ gadget\r\n\ @param\ price\ \ the\ price\ of\ the\ gadget\r\n\ @param\ weight\ the\ weight\ of\ the\ gadget\ in\ grams\r\n\ @param\ size\ \ \ the\ size\ of\ the\ gadget\r\n
+comment2.params=
+comment2.target=java.lang.String\ getModel()
+comment2.text=\r\n\ Returns\ the\ model\ name\ of\ the\ gadget.\r\n
+comment3.params=
+comment3.target=double\ getPrice()
+comment3.text=\r\n\ Returns\ the\ price\ of\ the\ gadget.\r\n
+comment4.params=
+comment4.target=int\ getWeight()
+comment4.text=\r\n\ Returns\ the\ weight\ of\ the\ gadget\ in\ grams.\r\n
+comment5.params=
+comment5.target=java.lang.String\ getSize()
+comment5.text=\r\n\ Returns\ the\ size\ of\ the\ gadget.\r\n
+comment6.params=
+comment6.target=void\ display()
+comment6.text=\r\n\ Displays\ all\ details\ of\ the\ gadget\ to\ the\ console.\r\n
+numComments=7
