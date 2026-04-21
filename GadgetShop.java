@@ -1,12 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
  * GadgetShop class provides a Swing GUI for managing a collection of gadgets.
  * Users can add Mobile phones and MP3 players, display all gadgets,
  * make calls, download music, and delete gadgets.
+ * All output is shown in the built-in output panel and in the terminal.
  *
  * CS4001 Coursework - Gadget Shop
  */
@@ -34,6 +36,9 @@ public class GadgetShop extends JFrame implements ActionListener {
     private JButton btnMakeCall;
     private JButton btnDownloadMusic;
     private JButton btnDelete;
+
+    // Output display area
+    private JTextArea outputArea;
 
     /**
      * Constructor: builds and displays the Gadget Shop GUI.
@@ -84,6 +89,25 @@ public class GadgetShop extends JFrame implements ActionListener {
         btnDownloadMusic.addActionListener(this);
         btnDelete.addActionListener(this);
 
+        // Output area - mirrors all System.out output inside the GUI window
+        outputArea = new JTextArea();
+        outputArea.setEditable(false);
+        outputArea.setFont(new Font("Consolas", Font.PLAIN, 12));
+        outputArea.setBackground(new Color(20, 20, 28));
+        outputArea.setForeground(new Color(180, 220, 255));
+        outputArea.setBorder(BorderFactory.createEmptyBorder(6, 8, 6, 8));
+        JScrollPane outputScroll = new JScrollPane(outputArea);
+        outputScroll.setBorder(BorderFactory.createTitledBorder(
+            BorderFactory.createLineBorder(accent, 1),
+            "Output",
+            javax.swing.border.TitledBorder.LEFT,
+            javax.swing.border.TitledBorder.TOP,
+            labelFont, accent));
+        outputScroll.setBackground(darkBg);
+
+        // Redirect System.out to the output area while keeping terminal output
+        redirectSystemOut(outputArea);
+
         // Header panel
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 16, 10));
         headerPanel.setBackground(new Color(20, 20, 30));
@@ -100,7 +124,7 @@ public class GadgetShop extends JFrame implements ActionListener {
         JPanel inputPanel = new JPanel(new GridBagLayout());
         inputPanel.setBackground(darkBg);
         inputPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createEmptyBorder(8, 8, 8, 8),
+            BorderFactory.createEmptyBorder(8, 8, 4, 8),
             BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(accent, 1),
                 "Gadget Details",
@@ -113,17 +137,25 @@ public class GadgetShop extends JFrame implements ActionListener {
         gbc.fill   = GridBagConstraints.HORIZONTAL;
 
         // Row 0: Model | Price | Weight | Size
-        addLabelField(inputPanel, gbc, "Model:",       txtModel,         0, 0, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Price (£):",   txtPrice,         2, 0, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Weight (g):",  txtWeight,        4, 0, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Size:",        txtSize,          6, 0, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Model:",          txtModel,         0,  0, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Price (\u00A3):",      txtPrice,         2,  0, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Weight (g):",     txtWeight,        4,  0, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Size:",           txtSize,          6,  0, labelFont, darkBg, accent);
+
+        JLabel sizeHint = new JLabel("e.g. 71mm x 137mm x 9mm");
+        sizeHint.setFont(new Font("Segoe UI", Font.ITALIC, 10));
+        sizeHint.setForeground(Color.GRAY);
+        gbc.gridx = 8;
+        gbc.gridy = 0;
+        gbc.weightx = 0;
+        inputPanel.add(sizeHint, gbc);
 
         // Row 1: Credit | Memory | Phone No | Duration | Download | Item No
-        addLabelField(inputPanel, gbc, "Credit (min):",   txtCredit,        0, 1, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Memory (MB):",    txtMemory,        2, 1, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Phone No:",       txtPhoneNo,       4, 1, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Duration (min):", txtDuration,      6, 1, labelFont, darkBg, accent);
-        addLabelField(inputPanel, gbc, "Download (MB):",  txtDownload,      8, 1, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Credit (min):",   txtCredit,        0,  1, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Memory (MB):",    txtMemory,        2,  1, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Phone No:",       txtPhoneNo,       4,  1, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Duration (min):", txtDuration,      6,  1, labelFont, darkBg, accent);
+        addLabelField(inputPanel, gbc, "Download (MB):",  txtDownload,      8,  1, labelFont, darkBg, accent);
         addLabelField(inputPanel, gbc, "Item No:",        txtDisplayNumber, 10, 1, labelFont, darkBg, accent);
 
         // Build button panel
@@ -137,16 +169,46 @@ public class GadgetShop extends JFrame implements ActionListener {
         buttonPanel.add(btnDownloadMusic);
         buttonPanel.add(btnDelete);
 
+        // Centre panel: input fields on top, output area below
+        JPanel centrePanel = new JPanel(new BorderLayout(0, 4));
+        centrePanel.setBackground(darkBg);
+        centrePanel.add(inputPanel,   BorderLayout.NORTH);
+        centrePanel.add(outputScroll, BorderLayout.CENTER);
+
         // Assemble frame
         getContentPane().setBackground(darkBg);
         setLayout(new BorderLayout());
-        add(headerPanel, BorderLayout.NORTH);
-        add(inputPanel,  BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.SOUTH);
+        add(headerPanel,  BorderLayout.NORTH);
+        add(centrePanel,  BorderLayout.CENTER);
+        add(buttonPanel,  BorderLayout.SOUTH);
 
-        setSize(920, 250);
+        setSize(920, 520);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    /**
+     * Redirects System.out so output appears in the GUI panel and the terminal.
+     */
+    private void redirectSystemOut(JTextArea area) {
+        PrintStream original = System.out;
+        OutputStream stream = new OutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                original.write(b);
+            }
+
+            @Override
+            public void write(byte[] b, int off, int len) throws IOException {
+                String text = new String(b, off, len, java.nio.charset.StandardCharsets.UTF_8);
+                SwingUtilities.invokeLater(() -> {
+                    area.append(text);
+                    area.setCaretPosition(area.getDocument().getLength());
+                });
+                original.write(b, off, len);
+            }
+        };
+        System.setOut(new PrintStream(stream, true));
     }
 
     /**
@@ -303,7 +365,7 @@ public class GadgetShop extends JFrame implements ActionListener {
     }
 
     /**
-     * Prints every gadget in the list to the console with its index number.
+     * Prints every gadget in the list to the output area with its index number.
      */
     private void displayAllAction() {
         System.out.println("=== All Gadgets ===");
@@ -316,28 +378,38 @@ public class GadgetShop extends JFrame implements ActionListener {
 
     /**
      * Gets the Mobile at the specified index and calls makeCall().
+     * Shows a dialog if the selected gadget is not a Mobile.
      */
     private void makeCallAction() {
         int idx = getDisplayNumber();
         if (idx != -1) {
-            Mobile mobile = (Mobile) gadgets.get(idx);
-            mobile.makeCall(getPhoneNo(), getDuration());
+            try {
+                Mobile mobile = (Mobile) gadgets.get(idx);
+                mobile.makeCall(getPhoneNo(), getDuration());
+            } catch (ClassCastException e) {
+                JOptionPane.showMessageDialog(this, "Selected gadget is not a Mobile phone");
+            }
         }
     }
 
     /**
      * Gets the MP3 at the specified index and calls downloadMusic().
+     * Shows a dialog if the selected gadget is not an MP3 player.
      */
     private void downloadMusicAction() {
         int idx = getDisplayNumber();
         if (idx != -1) {
-            MP3 mp3 = (MP3) gadgets.get(idx);
-            mp3.downloadMusic(getDownload());
+            try {
+                MP3 mp3 = (MP3) gadgets.get(idx);
+                mp3.downloadMusic(getDownload());
+            } catch (ClassCastException e) {
+                JOptionPane.showMessageDialog(this, "Selected gadget is not an MP3 player");
+            }
         }
     }
 
     /**
-     * Deletes the gadget at the specified index (bonus feature).
+     * Deletes the gadget at the specified index (additional feature).
      */
     private void deleteGadgetAction() {
         int idx = getDisplayNumber();

@@ -15,7 +15,7 @@ The app lets you:
 - Delete a gadget from the inventory
 - Clear all input fields in one click
 
-All output (gadget details, call results, error messages) prints to the terminal/console.
+All output (gadget details, call results, error messages) appears in the built-in **Output panel** inside the GUI window, and simultaneously in the terminal/console.
 
 ---
 
@@ -81,7 +81,7 @@ It holds an `ArrayList<Gadget>` that stores all gadgets added during the session
 | Model | Gadget model name |
 | Price | Price in pounds |
 | Weight | Weight in grams |
-| Size | Physical dimensions |
+| Size | Physical dimensions (e.g. `71mm x 137mm x 9mm`) |
 | Credit (min) | Calling credit — Mobile only |
 | Memory (MB) | Available memory — MP3 only |
 | Phone No | Number to call |
@@ -110,6 +110,10 @@ The **Item No** field is validated with a `try/catch` block:
 - If the number is out of range → dialog: *"Number out of range"*
 - Returns `-1` if invalid — all buttons that use it check for `-1` before doing anything
 
+**Make A Call** and **Download Music** also catch a `ClassCastException`:
+- Pressing "Make A Call" on an MP3 index → dialog: *"Selected gadget is not a Mobile phone"*
+- Pressing "Download Music" on a Mobile index → dialog: *"Selected gadget is not an MP3 player"*
+
 ---
 
 ## How to Run
@@ -136,11 +140,13 @@ The interface uses a dark theme with colour-coded buttons:
 
 - **Green** — Add Mobile, Add MP3
 - **Red** — Clear
-**Cyan/Blue** — Display All
+- **Cyan/Blue** — Display All
 - **Orange** — Make A Call, Download Music
 - **Purple** — Delete Gadget
 
-Built with Java Swing using `GridBagLayout` for the input area and `FlowLayout` for the button row. Custom fonts (Segoe UI), styled text fields with dark backgrounds, and a header bar with the app title.
+Built with Java Swing using `GridBagLayout` for the input area, `FlowLayout` for the button row, and `BorderLayout` to stack the input panel above the output panel. Custom fonts (Segoe UI / Consolas), styled text fields with dark backgrounds, and a header bar with the app title.
+
+The **Output panel** (`JTextArea` in a `JScrollPane`) displays all program output — gadget details, call results, confirmations, and errors — directly inside the GUI window. Output is also mirrored to the terminal via a custom `OutputStream` redirect on `System.out`.
 
 ---
 
@@ -148,7 +154,7 @@ Built with Java Swing using `GridBagLayout` for the input area and `FlowLayout` 
 
 - Gadgets are stored in memory only — they reset when the app is closed
 - The `Item No` field uses **zero-based indexing** (first gadget = 0, second = 1, etc.)
-- `Display All` prints to the BlueJ terminal or command prompt, not inside the GUI window
+- `Display All` output appears in the built-in Output panel inside the GUI window, and simultaneously in the terminal
 - The `Delete Gadget` button is an additional feature beyond the base spec
 
 ---

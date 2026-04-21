@@ -59,7 +59,7 @@ public class Gadget {
      */
     public void display() {
         System.out.println("Model:  " + model);
-        System.out.println("Price:  £" + price);
+        System.out.println("Price:  \u00A3" + price);
         System.out.println("Weight: " + weight + "g");
         System.out.println("Size:   " + size);
     }
