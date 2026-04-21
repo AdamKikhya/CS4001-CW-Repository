@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=MP3
+comment0.text=\r\n\ MP3\ class\ represents\ an\ MP3\ player\ gadget.\r\n\ It\ extends\ Gadget\ and\ adds\ available\ memory\ functionality.\r\n\r\n\ CS4001\ Coursework\ -\ Gadget\ Shop\r\n
+comment1.params=model\ price\ weight\ size\ availableMemory
+comment1.target=MP3(java.lang.String,\ double,\ int,\ java.lang.String,\ int)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ MP3.\r\n\r\n\ @param\ model\ \ \ \ \ \ \ \ \ \ \ the\ model\ name\r\n\ @param\ price\ \ \ \ \ \ \ \ \ \ \ the\ price\ in\ pounds\r\n\ @param\ weight\ \ \ \ \ \ \ \ \ \ the\ weight\ in\ grams\r\n\ @param\ size\ \ \ \ \ \ \ \ \ \ \ \ the\ size\ description\r\n\ @param\ availableMemory\ the\ initial\ available\ memory\ in\ MB\r\n
+comment2.params=
+comment2.target=int\ getAvailableMemory()
+comment2.text=\r\n\ Returns\ the\ current\ available\ memory\ in\ MB.\r\n
+comment3.params=memoryRequired
+comment3.target=void\ downloadMusic(int)
+comment3.text=\r\n\ Downloads\ music,\ reducing\ available\ memory\ by\ the\ amount\ required.\r\n\ Prints\ an\ error\ if\ there\ is\ not\ enough\ memory.\r\n\r\n\ @param\ memoryRequired\ the\ memory\ needed\ in\ MB\r\n
+comment4.params=memoryFreed
+comment4.target=void\ deleteMusic(int)
+comment4.text=\r\n\ Deletes\ music,\ freeing\ up\ the\ specified\ amount\ of\ memory.\r\n\r\n\ @param\ memoryFreed\ the\ amount\ of\ memory\ freed\ in\ MB\r\n
+comment5.params=
+comment5.target=void\ display()
+comment5.text=\r\n\ Displays\ all\ gadget\ details\ plus\ the\ available\ memory\ remaining.\r\n
+numComments=6
